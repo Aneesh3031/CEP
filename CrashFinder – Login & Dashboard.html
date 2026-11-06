@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CrashFinder</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f4f6fb;--panel:#fff;--ink:#101a2e;--mut:#5d6b82;--line:#dde3ee;--brand:#2563eb;--brand-ink:#fff;--side:#0f1a2e;--side-ink:#c9d4e8;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--okbg:#e5f6ec;--warnbg:#fdf0dc;--badbg:#fde6e6;--hd:'Space Grotesk',system-ui,sans-serif;--bd:'Plus Jakarta Sans',system-ui,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--panel:#141f35;--ink:#e8eefb;--mut:#92a1bb;--line:#243350;--brand:#4b83f5;--side:#080e1b;--okbg:#10301e;--warnbg:#3a2b0e;--badbg:#3d1717;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171}}
+:root[data-theme="dark"]{--bg:#0b1220;--panel:#141f35;--ink:#e8eefb;--mut:#92a1bb;--line:#243350;--brand:#4b83f5;--side:#080e1b;--okbg:#10301e;--warnbg:#3a2b0e;--badbg:#3d1717;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--bd)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:50}
+h1,h2,h3{font-family:var(--hd);margin:0;font-weight:700;letter-spacing:-.01em}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:10px;padding:10px 18px;font-weight:600}
+.btn:hover{filter:brightness(1.08)}.btn:disabled{opacity:.55;cursor:default}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.btn.sm{padding:6px 12px;font-size:13px;border-radius:8px}
+/* login */
+.login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.pitch{background:#0d1830;color:#e8eefb;padding:56px;display:flex;flex-direction:column;justify-content:space-between;gap:32px}
+.pitch h1{font-size:40px;line-height:1.1;max-width:15em}
+.pitch p{color:#a9b8d4;max-width:30em}
+.chain{display:flex;flex-direction:column;gap:10px;max-width:26em}
+.chain div{display:flex;gap:12px;align-items:center;padding:12px 14px;border:1px solid #243350;border-radius:12px;background:#111f3b}
+.chain b{font-family:var(--hd);color:#7cc0ff;min-width:5.5em}
+.formside{display:grid;place-items:center;padding:32px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;width:100%;max-width:400px}
+.card h2{font-size:24px;margin-bottom:4px}
+label{display:block;font-weight:600;font-size:13px;margin:14px 0 5px}
+input[type=text],input[type=email],input[type=password],select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+.err{color:var(--bad);font-size:13px;min-height:1.4em;margin-top:10px}
+.link{background:none;border:0;color:var(--brand);padding:0;font-weight:600}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--hd);font-weight:700;font-size:20px}
+.logo{width:30px;height:30px;border-radius:8px;background:var(--brand);display:grid;place-items:center}
+.logo svg{width:18px;height:18px}
+/* app */
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.side{background:var(--side);color:var(--side-ink);padding:20px 14px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow:auto}
+.side .brand{color:#fff;padding:0 8px}
+.side h3{font-size:13px;font-weight:600;color:#7f90ad;padding:0 8px;margin-bottom:6px}
+.dev,.nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-radius:10px;padding:9px 10px;color:inherit}
+.dev:hover,.nav button:hover{background:#16233d}
+.dev.on,.nav button.on{background:#1b2d52;color:#fff}
+.dev small{display:block;color:#7f90ad;font-size:12px}
+.dot{width:8px;height:8px;border-radius:50%;background:#51607b;flex:none}
+.dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}
+.me{margin-top:auto;padding:10px;border-top:1px solid #1c2a47;font-size:13px}
+.main{padding:28px 32px;max-width:1100px;width:100%}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.top h1{font-size:28px}.top p{margin:2px 0 0;color:var(--mut)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+.hero{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.ring{width:150px;height:150px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring div{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring b{font:700 38px var(--hd)}.ring span{font-size:12px;color:var(--mut)}
+.hero h2{font-size:22px}.hero p{color:var(--mut);margin:6px 0 16px;max-width:34em}
+.scanbtn{font-size:17px;padding:14px 28px;border-radius:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0}
+.stat b{display:block;font:700 26px var(--hd)}.stat span{color:var(--mut);font-size:13px}
+.subs{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:12px}
+.sub{border:1px solid var(--line);border-radius:12px;padding:14px}
+.sub .n{font-weight:600}.sub .d{font-size:12.5px;color:var(--mut);margin:2px 0 8px}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;background:var(--bg);color:var(--mut)}
+.pill.ok{background:var(--okbg);color:var(--ok)}.pill.warn{background:var(--warnbg);color:var(--warn)}.pill.bad{background:var(--badbg);color:var(--bad)}
+.stage{margin:0 0 4px;font-weight:600;color:var(--mut);font-size:13px}
+.steps{list-style:none;margin:10px 0;padding:0;display:grid;gap:8px}
+.steps li{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;color:var(--mut)}
+.steps li.run{border-color:var(--brand);color:var(--ink)}.steps li.done{color:var(--ink)}
+.bar{height:6px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--brand);width:0;transition:width .4s}
+.spin{width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--brand);border-radius:50%;animation:s .8s linear infinite;flex:none}
+@keyframes s{to{transform:rotate(360deg)}}
+.verdict{border-left:4px solid var(--ok);padding-left:14px}.verdict.warn{border-color:var(--warn)}.verdict.bad{border-color:var(--bad)}
+.verdict h3{font-size:18px;margin-bottom:4px}.verdict p{margin:4px 0}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--mut);font-weight:600}
+.wrap{overflow-x:auto}
+.empty{text-align:center;color:var(--mut);padding:28px}
+.set{display:grid;gap:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}.row small{display:block;color:var(--mut)}
+.tg{appearance:none;width:42px;height:24px;border-radius:99px;background:var(--line);position:relative;border:0;flex:none;transition:background .2s}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s}
+.tg:checked{background:var(--brand)}.tg:checked::after{left:21px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;font-size:14px}.kv span{color:var(--mut)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:60}
+.note{font-size:12.5px;color:var(--mut);margin-top:10px}
+@media(max-width:860px){.login{grid-template-columns:1fr}.pitch{padding:28px}.pitch h1{font-size:28px}.chain{display:none}
+.app{grid-template-columns:1fr}.side{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;padding:12px}
+.side>div{flex:1 1 100%}.nav{display:flex;gap:4px;flex-wrap:wrap}.nav button{width:auto}.devs{display:flex;gap:6px;flex-wrap:wrap}.dev{width:auto}.me{margin:0;border:0}
+.main{padding:18px 14px}.hero{grid-template-columns:1fr;justify-items:center;text-align:center}.stats{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body><div id="root"></div>
+<script>
+const $=s=>document.querySelector(s);
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LOGO='<span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></span>';
+let S={user:LS.get('cf_session',null),view:'dash',mode:'in',scan:null,err:'',data:null,open:null};
+
+async function hash(t){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return btoa(t)}}
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2200)}
+
+/* ---- device detection (real values from this browser) ---- */
+function detect(){
+ const ua=navigator.userAgent;
+ const os=/Windows/.test(ua)?'Windows':/Android/.test(ua)?'Android':/iPhone|iPad/.test(ua)?'iOS':/Mac/.test(ua)?'macOS':/Linux/.test(ua)?'Linux':'Unknown OS';
+ const br=/Edg\//.test(ua)?'Edge':/Chrome\//.test(ua)?'Chrome':/Firefox\//.test(ua)?'Firefox':/Safari\//.test(ua)?'Safari':'Browser';
+ return{os,browser:br,cores:navigator.hardwareConcurrency||'n/a',ram:navigator.deviceMemory?navigator.deviceMemory+' GB (approx.)':'n/a',screen:screen.width+'×'+screen.height,lang:navigator.language}}
+const defSettings=()=>({ram:true,pcie:true,storage:true,software:true,deep:false,plain:true,remind:true});
+function load(){
+ const k='cf_data_'+S.user.email;let d=LS.get(k,null);
+ if(!d){const id='dev_'+Date.now();d={active:id,devices:[{id,name:'This PC',here:true,info:detect(),history:[],settings:defSettings()}]};LS.set(k,d)}
+ S.data=d}
+const save=()=>LS.set('cf_data_'+S.user.email,S.data);
+const dev=()=>S.data.devices.find(d=>d.id===S.data.active)||S.data.devices[0];
+
+/* ---- scan engine (simulated) ---- */
+const SUBS=[['ram','RAM · SPD / SMBus','Timing, voltage and CRC flags on each DIMM slot',1],['pcie','GPU · PCIe link','Link width, bus parity and VRAM timeouts',1],['storage','Storage · S.M.A.R.T.','Reallocated sectors and controller temperature',1],['driver','Drivers & minidumps','Crash dumps and driver integrity',2],['os','OS & updates','Failed updates and registry keys',2],['malware','Processes & malware','Runaway threads, miners and memory leaks',2]];
+const SCEN=[
+ {w:45,r:'Healthy',st:{},t:'No fault found',m:'All hardware checks returned normal values and the software audit found nothing unusual.',f:'No action needed. If the freezes continue, run a deep scan right after the next crash.',c:'—',score:[92,99]},
+ {w:15,r:'Hardware fault',st:{ram:'bad'},t:'RAM stick #2 looks faulty',m:'The memory in slot 2 reported CRC errors and unstable timing.',f:'Back up your files now. Run the PC with only stick #1 installed, then replace stick #2 if the crashes stop.',c:'RAM stick #2',score:[38,55]},
+ {w:10,r:'Hardware fault',st:{pcie:'bad'},t:'Graphics card link is degraded',m:'The GPU is running at ×1 instead of ×16 and reported bus parity errors.',f:'Reseat the graphics card and its power cables. If the link stays degraded, the slot or card needs service.',c:'GPU / PCIe slot',score:[40,58]},
+ {w:10,r:'Hardware fault',st:{storage:'bad'},t:'Your drive is wearing out',m:'S.M.A.R.T. shows growing reallocated sectors and high controller temperature.',f:'Back up your data immediately and plan to replace the drive.',c:'Storage drive',score:[30,50]},
+ {w:12,r:'Software issue',st:{driver:'bad'},t:'A graphics driver is causing crashes',m:'Crash dumps point to the same display driver every time.',f:'Do a clean reinstall of the graphics driver from the manufacturer’s site.',c:'Display driver',score:[60,76]},
+ {w:8,r:'Software issue',st:{os:'warn',malware:'warn'},t:'A failed update and a runaway process',m:'A recent Windows update did not finish, and one background process keeps growing in memory.',f:'Re-run Windows Update, restart, and end or remove the process shown in the report.',c:'OS update / background process',score:[62,78]}];
+const rnd=(a,b)=>Math.floor(a+Math.random()*(b-a+1));
+function pick(){let t=Math.random()*100;for(const s of SCEN){if((t-=s.w)<0)return s}return SCEN[0]}
+function startScan(){
+ const dv=dev(),cfg=dv.settings;
+ const plan=SUBS.filter(s=>(s[0]==='ram'?cfg.ram:s[0]==='pcie'?cfg.pcie:s[0]==='storage'?cfg.storage:cfg.software));
+ if(!plan.length){toast('Turn on at least one scan option in Settings.');return}
+ S.scan={i:0,plan,pct:0};render();
+ const step=()=>{
+  if(!S.scan)return;
+  if(S.scan.i>=plan.length){finish(dv,plan);return}
+  S.scan.pct=Math.round(S.scan.i/plan.length*100);render();
+  S.scan.i++;setTimeout(step,cfg.deep?1400:800)};
+ step()}
+function finish(dv,plan){
+ const sc=pick(),st={};
+ plan.forEach(p=>st[p[0]]=sc.st[p[0]]||'ok');
+ const hwBad=['ram','pcie','storage'].some(k=>st[k]==='bad');
+ if(hwBad)['driver','os','malware'].forEach(k=>delete st[k]);
+ const rec={id:'s'+Date.now(),date:new Date().toISOString(),result:sc.r,title:sc.t,msg:sc.m,fix:sc.f,comp:sc.c,score:rnd(sc.score[0],sc.score[1]),st,deep:dv.settings.deep};
+ dv.history.unshift(rec);save();S.scan=null;S.view='dash';render();toast('Scan finished and saved to this device’s history')}
+
+/* ---- views ---- */
+const fmt=d=>new Date(d).toLocaleString([],{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const tone=r=>r==='Healthy'?'ok':r==='Hardware fault'?'bad':'warn';
+function render(){$('#root').innerHTML=S.user?appView():loginView();bind()}
+function loginView(){const up=S.mode==='up';
+return`<div class="login"><section class="pitch"><div class="brand">${LOGO}CrashFinder</div>
+<div><h1>Know what crashed your PC without opening the case.</h1><p style="margin-top:14px">Sign in to see each of your computers, their crash history and run a scan in one click.</p></div>
+<div class="chain"><div><b>Stage 1</b>RAM, GPU link and storage checks</div><div><b>Stage 2</b>Drivers, updates and processes</div><div><b>Result</b>A plain-English verdict and next step</div></div></section>
+<section class="formside"><form class="card" id="auth" autocomplete="on"><h2>${up?'Create your account':'Welcome back'}</h2><p style="color:var(--mut);margin:0">${up?'Your devices and crash history stay on this browser.':'Sign in to open your dashboard.'}</p>
+${up?'<label for="nm">Your name</label><input type="text" id="nm" autocomplete="name">':''}
+<label for="em">Email</label><input type="email" id="em" autocomplete="email" required>
+<label for="pw">Password</label><input type="password" id="pw" autocomplete="${up?'new-password':'current-password'}" required minlength="6">
+<div class="err" id="err" role="alert">${esc(S.err)}</div>
+<button class="btn" style="width:100%" type="submit">${up?'Create account':'Sign in'}</button>
+<p style="text-align:center;margin:16px 0 0;color:var(--mut)">${up?'Already registered?':'New to CrashFinder?'} <button type="button" class="link" id="sw">${up?'Sign in':'Create an account'}</button></p>
+<p class="note">Demo build: accounts are stored locally in this browser, not on a server.</p></form></section></div>`}
+
+function appView(){const dv=dev();
+const last=dv.history[0];
+return`<div class="app"><aside class="side"><div class="brand">${LOGO}CrashFinder</div>
+<div><h3>Your devices</h3><div class="devs">${S.data.devices.map(d=>{const l=d.history[0];return`<button class="dev ${d.id===dv.id?'on':''}" data-dev="${d.id}"><span class="dot ${l?tone(l.result):''}"></span><span>${esc(d.name)}<small>${d.here?'This device':esc(d.info.os)}</small></span></button>`}).join('')}
+<button class="dev" id="add"><span style="width:8px;text-align:center">+</span><span>Add a device</span></button></div></div>
+<div class="nav"><h3>Menu</h3>${[['dash','Dashboard'],['hist','Crash history'],['set','Settings']].map(n=>`<button data-nav="${n[0]}" class="${S.view===n[0]?'on':''}">${n[1]}</button>`).join('')}</div>
+<div class="me">${esc(S.user.name||S.user.email)}<br><button class="link" id="out" style="color:#7cc0ff">Sign out</button></div></aside>
+<main class="main">${S.view==='dash'?dash(dv,last):S.view==='hist'?hist(dv):sets(dv)}</main></div>`}
+
+function dash(dv,last){
+ const sc=S.scan,n=dv.history.length,bad=dv.history.filter(h=>h.result!=='Healthy').length;
+ const score=last?last.score:null,col=!last?'var(--line)':last.result==='Healthy'?'var(--ok)':last.result==='Hardware fault'?'var(--bad)':'var(--warn)';
+ const C=2*Math.PI*62,off=C*(1-(score||0)/100);
+ return`<div class="top"><div><h1>${esc(dv.name)}</h1><p>${dv.info.os} · ${dv.info.cores} CPU threads · RAM ${dv.info.ram}</p></div></div>
+<section class="panel hero"><div class="ring"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--line)" stroke-width="12"/><circle cx="75" cy="75" r="62" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg><div><b>${score??'–'}</b><span>health score</span></div></div>
+<div><h2>${last?esc(last.title):'This device hasn’t been scanned yet'}</h2><p>${last?'Last scan: '+fmt(last.date)+'.':'Run your first scan to check your RAM, GPU link, storage, drivers and processes.'}</p>
+<button class="btn scanbtn" id="scan" ${sc?'disabled':''}>${sc?'Scanning…':'Scan this PC'}</button></div></section>
+${sc?scanPanel(sc):''}
+<div class="stats"><div class="panel stat"><b>${n}</b><span>scans run on this device</span></div><div class="panel stat"><b>${bad}</b><span>problems found</span></div><div class="panel stat"><b>${last?esc(last.result):'–'}</b><span>latest result</span></div></div>
+${last&&!sc?verdict(last):''}
+<section class="panel" style="margin-top:14px"><h3>System components</h3><div class="subs">${SUBS.map(s=>{const v=last&&last.st[s[0]];return`<div class="sub"><div class="n">${s[1]}</div><div class="d">${s[2]}</div><span class="pill ${v||''}">${v==='ok'?'Healthy':v==='bad'?'Problem found':v==='warn'?'Needs attention':'Not checked yet'}</span></div>`}).join('')}</div></section>`}
+function scanPanel(sc){return`<section class="panel" style="margin-top:14px" aria-live="polite"><h3>Scan in progress</h3><div class="bar" style="margin:12px 0"><i style="width:${sc.pct}%"></i></div><ul class="steps">${sc.plan.map((p,i)=>`<li class="${i<sc.i-1?'done':i===sc.i-1?'run':''}">${i===sc.i-1?'<span class="spin"></span>':i<sc.i-1?'✓':'○'}<span>${p[1]} <small style="color:var(--mut)">(stage ${p[3]})</small></span></li>`).join('')}</ul></section>`}
+function verdict(r){return`<section class="panel verdict ${tone(r.result)==='ok'?'':tone(r.result)}" style="margin-top:14px"><h3>${esc(r.title)}</h3><p>${esc(r.msg)}</p><p><b>What to do:</b> ${esc(r.fix)}</p></section>`}
+function hist(dv){return`<div class="top"><div><h1>Crash history</h1><p>${esc(dv.name)} · every scan saved on this device</p></div><div><button class="btn ghost sm" id="exp">Export history</button></div></div>
+<section class="panel">${dv.history.length?`<div class="wrap"><table><thead><tr><th>Date</th><th>Result</th><th>Cause</th><th>Score</th><th></th></tr></thead><tbody>${dv.history.map(h=>`<tr><td>${fmt(h.date)}</td><td><span class="pill ${tone(h.result)}">${h.result}</span></td><td>${esc(h.title)}${S.open===h.id?`<div style="margin-top:8px;color:var(--mut)">${esc(h.msg)}<br><b style="color:var(--ink)">What to do:</b> ${esc(h.fix)}</div>`:''}</td><td>${h.score}</td><td style="white-space:nowrap"><button class="btn ghost sm" data-open="${h.id}">${S.open===h.id?'Hide':'Details'}</button> <button class="btn ghost sm" data-del="${h.id}">Delete</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No scans yet. Go to the dashboard and choose Scan this PC.</div>'}</section>`}
+function sets(dv){const c=dv.settings,t=(k,a,b)=>`<div class="row"><div>${a}<small>${b}</small></div><input class="tg" type="checkbox" data-t="${k}" ${c[k]?'checked':''} aria-label="${a}"></div>`;
+return`<div class="top"><div><h1>Settings</h1><p>These apply to ${esc(dv.name)} only</p></div></div>
+<section class="panel"><h3>Device</h3><div class="row"><div>Device name<small>Shown in the sidebar</small></div><input type="text" id="dn" value="${esc(dv.name)}" style="max-width:220px"></div>
+<div class="kv" style="margin-top:12px"><span>Operating system</span><div>${dv.info.os}</div><span>Browser</span><div>${dv.info.browser}</div><span>CPU threads</span><div>${dv.info.cores}</div><span>Memory</span><div>${dv.info.ram}</div><span>Screen</span><div>${dv.info.screen}</div></div></section>
+<section class="panel" style="margin-top:14px"><h3>Scan options</h3>${t('ram','RAM · SPD / SMBus','Stage 1')}${t('pcie','GPU · PCIe link','Stage 1')}${t('storage','Storage · S.M.A.R.T.','Stage 1')}${t('software','Software audit','Stage 2: drivers, OS updates, processes')}${t('deep','Deep scan','Slower, reads more minidump history')}</section>
+<section class="panel" style="margin-top:14px"><h3>Reports</h3>${t('plain','Plain-English reports','Avoid technical jargon in verdicts')}${t('remind','Scan reminders','Suggest a scan after a crash is logged')}
+<div class="row"><div>Appearance<small>Follows your system by default</small></div><select id="th" style="max-width:150px"><option value="">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div></section>
+<section class="panel" style="margin-top:14px"><h3>Danger zone</h3><div class="row"><div>Clear history<small>Deletes all scans for this device</small></div><button class="btn danger sm" id="clr">Clear history</button></div>
+${dv.here?'':'<div class="row"><div>Remove device<small>Deletes this device and its history</small></div><button class="btn danger sm" id="rm">Remove device</button></div>'}</section>
+<p class="note">Scans in this demo are simulated. A real scan needs the CrashFinder backend to read SMBus, PCIe and S.M.A.R.T. registers.</p>`}
+
+/* ---- events ---- */
+function bind(){
+ const f=$('#auth');if(f){$('#sw').onclick=()=>{S.mode=S.mode==='up'?'in':'up';S.err='';render()};
+  f.onsubmit=async e=>{e.preventDefault();const em=$('#em').value.trim().toLowerCase(),pw=$('#pw').value,users=LS.get('cf_users',{}),h=await hash(pw);
+   if(S.mode==='up'){if(users[em]){S.err='That email already has an account. Sign in instead.';return render()}
+    users[em]={name:$('#nm').value.trim()||em.split('@')[0],h};LS.set('cf_users',users)}
+   else if(!users[em]||users[em].h!==h){S.err='Email or password is incorrect.';return render()}
+   S.user={email:em,name:users[em].name};LS.set('cf_session',S.user);S.err='';S.view='dash';load();render()}}
+ document.querySelectorAll('[data-dev]').forEach(b=>b.onclick=()=>{S.data.active=b.dataset.dev;save();S.scan=null;S.view='dash';render()});
+ document.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{S.view=b.dataset.nav;render()});
+ const q=(id,fn)=>{const e=$(id);if(e)e.onclick=fn};
+ q('#out',()=>{LS.set('cf_session',null);S.user=null;S.scan=null;render()});
+ q('#add',()=>{const n=prompt('Name this device (e.g. Office laptop)');if(!n)return;const id='dev_'+Date.now();S.data.devices.push({id,name:n.trim().slice(0,30),here:false,info:{os:'Unknown OS',browser:'—',cores:'n/a',ram:'n/a',screen:'n/a',lang:''},history:[],settings:defSettings()});S.data.active=id;save();S.view='dash';render()});
+ q('#scan',startScan);
+ q('#clr',()=>{if(confirm('Delete all scans for this device?')){dev().history=[];save();render()}});
+ q('#rm',()=>{if(confirm('Remove this device and its history?')){S.data.devices=S.data.devices.filter(d=>d.id!==dev().id);S.data.active=S.data.devices[0].id;save();S.view='dash';render()}});
+ q('#exp',()=>{const dv=dev(),txt=JSON.stringify({device:dv.name,info:dv.info,history:dv.history},null,2);navigator.clipboard?.writeText(txt).then(()=>toast('History copied to clipboard'),()=>toast('Copy failed'))});
+ document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{S.open=S.open===b.dataset.open?null:b.dataset.open;render()});
+ document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const dv=dev();dv.history=dv.history.filter(h=>h.id!==b.dataset.del);save();render()});
+ document.querySelectorAll('[data-t]').forEach(b=>b.onchange=()=>{dev().settings[b.dataset.t]=b.checked;save()});
+ const dn=$('#dn');if(dn)dn.onchange=()=>{dev().name=dn.value.trim().slice(0,30)||'This PC';save();render();toast('Device renamed')};
+ const th=$('#th');if(th){th.value=LS.get('cf_theme','');th.onchange=()=>{LS.set('cf_theme',th.value);applyTheme()}}}
+function applyTheme(){const t=LS.get('cf_theme','');if(t)document.documentElement.dataset.theme=t;else delete document.documentElement.dataset.theme}
+applyTheme();if(S.user)load();render();
+</script></body></html>
