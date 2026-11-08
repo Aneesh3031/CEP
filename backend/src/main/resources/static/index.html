@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="1; url='./CrashFinder%20%E2%80%93%20Login%20&%20Dashboard.html'">
+  <title>CrashFinder Pro – Enterprise Hardware Diagnostics</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #141f35;
+      --brand: #4b83f5;
+      --ink: #e8eefb;
+      --mut: #92a1bb;
+      --line: #243350;
+      --ok: #4ade80;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 36px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+    .logo {
+      width: 48px;
+      height: 48px;
+      background: var(--brand);
+      border-radius: 12px;
+      display: inline-grid;
+      place-items: center;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 26px;
+      margin: 0 0 8px;
+    }
+    p {
+      color: var(--mut);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0 0 24px;
+    }
+    .spin {
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--line);
+      border-top-color: var(--brand);
+      border-radius: 50%;
+      animation: s .8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes s { to { transform: rotate(360deg); } }
+    .btn {
+      display: inline-block;
+      background: var(--brand);
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      transition: filter .2s;
+    }
+    .btn:hover { filter: brightness(1.1); }
+    .links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 20px;
+      font-size: 13px;
+    }
+    .links a {
+      color: #7cc0ff;
+      text-decoration: none;
+    }
+    .links a:hover { text-decoration: underline; }
+  </style>
+  <script>
+    setTimeout(() => {
+      window.location.replace("./CrashFinder – Login & Dashboard.html");
+    }, 800);
+  </script>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+        <rect x="6" y="6" width="12" height="12" rx="2"/>
+        <path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>
+      </svg>
+    </div>
+    <div class="spin"></div>
+    <h1>Loading CrashFinder Pro</h1>
+    <p>Connecting to dynamic Spring Boot backend & H2 persistent database...</p>
+    <a class="btn" href="./CrashFinder – Login & Dashboard.html">Open Dashboard Now</a>
+    <div class="links">
+      <a href="http://localhost:8080/h2-console" target="_blank">H2 SQL Console</a>
+      <span>•</span>
+      <a href="http://localhost:8080/api/health" target="_blank">API Health Status</a>
+      <span>•</span>
+      <a href="http://localhost:8080/api/stats" target="_blank">System Stats</a>
+    </div>
+  </div>
+</body>
+</html>

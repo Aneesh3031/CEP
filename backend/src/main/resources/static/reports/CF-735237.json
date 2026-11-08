@@ -1,0 +1,124 @@
+{
+  "reportId": "CF-735237",
+  "timestamp": "2026-10-06T14:52:53.650Z",
+  "formattedTime": "6/10/2026, 8:22:53 pm",
+  "machine": {
+    "hostname": "Aneesh",
+    "os": "Microsoft Windows 11 Pro 64-bit",
+    "cpu": "Intel(R) Core(TM) Ultra 7 155H",
+    "ram": "31 GB (2x modules)",
+    "gpu": "NVIDIA GeForce RTX 4070 (PCIe Discrete GPU)",
+    "storage": "Samsung 980 PRO NVMe 1TB (1000GB)"
+  },
+  "scenario": "none",
+  "persona": "expert",
+  "stage1Pass": true,
+  "stage2Pass": true,
+  "rootCause": {
+    "title": "System Nominal & Fully Stable",
+    "severity": "PASS",
+    "severityColor": "cyber-emerald",
+    "affectedNode": null,
+    "explanation": "Zero electronic register errors or kernel crashes detected across SMBus DIMM channels, PCIe configuration space, or S.M.A.R.T. NVMe log pages. System electrical signaling is nominal.",
+    "recommendation": "System is healthy. You can inject a hardware failure scenario above to test CrashFinder Pro isolation logic."
+  },
+  "logs": [
+    {
+      "timestamp": "52:53.6",
+      "stage": "INIT",
+      "message": "Initialized CrashFinder Pro Engine v3.4. Host: Aneesh (Microsoft Windows 11 Pro 64-bit)",
+      "type": "info"
+    },
+    {
+      "timestamp": "52:53.6",
+      "stage": "INIT",
+      "message": "Target Topology: 2x DIMM Modules, NVIDIA GeForce RTX 4070 (PCIe Discrete GPU), 1x NVMe Drive(s)",
+      "type": "info"
+    },
+    {
+      "timestamp": "52:53.7",
+      "stage": "STAGE 1",
+      "message": "Probing SMBus host controller at I/O port 0x0E00...",
+      "type": "info"
+    },
+    {
+      "timestamp": "52:53.8",
+      "stage": "STAGE 1",
+      "message": "Reading SMBus SPD EEPROM DIMM #1 (Address 0x50)... CRC 0x7A PASS.",
+      "type": "emerald"
+    },
+    {
+      "timestamp": "52:53.8",
+      "stage": "STAGE 1",
+      "message": "Reading SMBus SPD EEPROM DIMM #2 (Address 0x51)...",
+      "type": "info"
+    },
+    {
+      "timestamp": "52:53.9",
+      "stage": "STAGE 1",
+      "message": "SMBus Address 0x51: JEDEC DDR4 SPD CRC OK. Timing latencies verified.",
+      "type": "emerald"
+    },
+    {
+      "timestamp": "52:54.0",
+      "stage": "STAGE 1",
+      "message": "Querying PCIe Bus 00:02.0 Configuration Space Capability Register 0x10...",
+      "type": "info"
+    },
+    {
+      "timestamp": "52:54.0",
+      "stage": "STAGE 1",
+      "message": "PCIe Bus 00:02.0 Link Status: Gen4 x16 link active, full 31.5 GB/s bidirectional throughput.",
+      "type": "emerald"
+    },
+    {
+      "timestamp": "52:54.1",
+      "stage": "STAGE 1",
+      "message": "Accessing NVMe Controller S.M.A.R.T. Health Metric Log Page 0x02...",
+      "type": "info"
+    },
+    {
+      "timestamp": "52:54.2",
+      "stage": "STAGE 1",
+      "message": "NVMe S.M.A.R.T.: Available Spare 100%, 0 Critical Warnings, 0 Bad Reallocated Sectors.",
+      "type": "emerald"
+    },
+    {
+      "timestamp": "52:54.2",
+      "stage": "STAGE 1",
+      "message": "Stage 1 Hardware Probing Complete: Physical Bus & Register Timing 100% Nominal.",
+      "type": "emerald"
+    },
+    {
+      "timestamp": "52:54.3",
+      "stage": "STAGE 2",
+      "message": "Initiating Stage 2 Kernel Minidump & Process Auditor...",
+      "type": "info"
+    },
+    {
+      "timestamp": "52:54.4",
+      "stage": "STAGE 2",
+      "message": "Scanning Windows System Minidump Repository (C:\\Windows\\Minidump)... Found: 0 files.",
+      "type": "info"
+    },
+    {
+      "timestamp": "52:54.5",
+      "stage": "STAGE 2",
+      "message": "Kernel minidump audit clean. Zero active thread deadlock conditions detected.",
+      "type": "emerald"
+    },
+    {
+      "timestamp": "52:54.6",
+      "stage": "COMPLETE",
+      "message": "2-Stage Probing Engine Complete. Root Cause Analysis established.",
+      "type": "emerald"
+    }
+  ],
+  "registersAudited": [
+    "SMBus Address 0x50 (DIMM #1 Serial Presence Detect)",
+    "SMBus Address 0x51 (DIMM #2 Serial Presence Detect)",
+    "PCIe Bus 00:02.0 Configuration Space (Link Width Status)",
+    "NVMe S.M.A.R.T. Health Log Page 0x02 (Spare & Temp)",
+    "Windows Kernel Minidump Header 0x7F"
+  ]
+}
